@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Machine Learning Test</string>
+    <string name="output">Output</string>
+    <string name="pick_image">Pick Image</string>
+    <string name="start_camera">Start Camera</string>
+    <string name="todo">TODO</string>
+    <string name="image_activity">Image Activity</string>
 </resources>
