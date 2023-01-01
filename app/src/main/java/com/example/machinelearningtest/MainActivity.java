@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.machinelearningtest.helpers.ImageHelperActivity;
+import com.example.machinelearningtest.helpers.TextRecognize;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onTextRecognizeButtonClick(View view){
-        Intent intent = new Intent(this, ImageHelperActivity.class);
+        Intent intent = new Intent(this, TextRecognize.class);
         startActivity(intent);
     }
 }

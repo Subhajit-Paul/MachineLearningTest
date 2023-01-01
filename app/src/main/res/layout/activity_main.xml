@@ -17,17 +17,19 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="spread" />
+        app:layout_constraintVertical_chainStyle="spread"
+        tools:ignore="UsingOnClickInXml" />
 
     <Button
         android:id="@+id/textRecognizeButton"
         android:layout_width="150dp"
         android:layout_height="250dp"
-        android:onClick="onImageButtonClick"
-        android:text="@string/image_activity"
+        android:onClick="onTextRecognizeButtonClick"
+        android:text="@string/recognise_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/button"
+        tools:ignore="UsingOnClickInXml" />
 </androidx.constraintlayout.widget.ConstraintLayout>
