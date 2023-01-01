@@ -1,6 +1,7 @@
 package com.example.machinelearningtest.helpers;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -8,31 +9,29 @@ import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.machinelearningtest.R;
-//import com.google.android.gms.tasks.OnFailureListener;
-//import com.google.android.gms.tasks.OnSuccessListener;
-//import com.google.mlkit.vision.common.InputImage;
-//import com.google.mlkit.vision.label.ImageLabel;
-//import com.google.mlkit.vision.label.ImageLabeler;
-//import com.google.mlkit.vision.label.ImageLabeling;
-//import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.label.ImageLabel;
+import com.google.mlkit.vision.label.ImageLabeler;
+import com.google.mlkit.vision.label.ImageLabeling;
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 
 import java.io.IOException;
-import java.util.List;
 
 public class ImageHelperActivity extends AppCompatActivity {
     private ImageView imageViewInput;
     private TextView  textViewOutput;
     private final int r_CODE = 1000;
-//    private ImageLabeler imageLabeler;
+    private ImageLabeler imageLabeler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +39,7 @@ public class ImageHelperActivity extends AppCompatActivity {
         textViewOutput = findViewById(R.id.textViewOutput);
         imageViewInput = findViewById(R.id.imageViewInput);
 
-//        imageLabeler = ImageLabeling.getClient(new ImageLabelerOptions.Builder().setConfidenceThreshold(.9f).build());
+        imageLabeler = ImageLabeling.getClient(new ImageLabelerOptions.Builder().setConfidenceThreshold(.6f).build());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -73,7 +72,7 @@ public class ImageHelperActivity extends AppCompatActivity {
                 Uri uri = data.getData();
                 Bitmap bitmap = loadFromURI(uri);
                 imageViewInput.setImageBitmap(bitmap);
-//                IMGClassifier(bitmap);
+                IMGClassifier(bitmap);
             }
         }
     }
@@ -95,27 +94,20 @@ public class ImageHelperActivity extends AppCompatActivity {
         return bitmap;
     }
 
-//    private void IMGClassifier(Bitmap bitmap){
-//        InputImage inputImage = InputImage.fromBitmap(bitmap, 0);
-//        imageLabeler.process(inputImage).addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
-//            @Override
-//            public void onSuccess(List<ImageLabel> imageLabels) {
-//                if(imageLabels.size() > 0){
-//                    StringBuilder sb = new StringBuilder();
-//                    for (ImageLabel label: imageLabels){
-//                        sb.append(label.getText()).append(" : ").append(label.getConfidence()).append("\n");
-//                    }
-//                    textViewOutput.setText(sb.toString());
-//                }
-//                else{
-//                    textViewOutput.setText("Couldn't Classify");
-//                }
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@androidx.annotation.NonNull Exception e) {
-//                e.printStackTrace();
-//            }
-//        });
-//    }
+    @SuppressLint("SetTextI18n")
+    private void IMGClassifier(Bitmap bitmap){
+        InputImage inputImage = InputImage.fromBitmap(bitmap, 0);
+        imageLabeler.process(inputImage).addOnSuccessListener(imageLabels -> {
+            if(imageLabels.size() > 0){
+                StringBuilder sb = new StringBuilder();
+                for (ImageLabel label: imageLabels){
+                    sb.append(label.getText()).append(" : ").append(label.getConfidence()).append("\n");
+                }
+                textViewOutput.setText(sb.toString());
+            }
+            else{
+                textViewOutput.setText("Couldn't Classify");
+            }
+        }).addOnFailureListener(Throwable::printStackTrace);
+    }
 }
