@@ -31,6 +31,8 @@ public class TextRecognize extends AppCompatActivity {
     private ImageView imageViewInput;
     private TextView textViewOutput;
     private final int r_CODE = 1000;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
 
     private TextRecognizer recognizer;
 
@@ -48,6 +50,9 @@ public class TextRecognize extends AppCompatActivity {
             if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
             }
+            if(checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, 0);
+            }
         }
     }
 
@@ -62,7 +67,8 @@ public class TextRecognize extends AppCompatActivity {
     }
 
     public void onStartCamera(View view){
-
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
     }
 
     @Override
@@ -77,8 +83,15 @@ public class TextRecognize extends AppCompatActivity {
                 imageViewInput.setImageBitmap(bitmap);
                 recognizer(bitmap);
             }
+            else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                assert data != null;
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                imageViewInput.setImageBitmap(bitmap);
+                recognizer(bitmap);
+            }
         }
     }
+
 
     private Bitmap loadFromURI(Uri uri){
         Bitmap bitmap = null;
